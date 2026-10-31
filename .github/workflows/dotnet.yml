@@ -1,0 +1,44 @@
+name: Build .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  SOLUTION: Example.slnx
+
+defaults:
+  run:
+    working-directory: sources
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        working-directory: .
+        run: dotnet tool restore
+
+      - name: Check code style
+        run: dotnet format "$SOLUTION" --verify-no-changes
+
+      - name: Restore dependencies
+        run: dotnet restore "$SOLUTION"
+
+      - name: Build
+        run: dotnet build "$SOLUTION" --no-restore --configuration Release --verbosity normal
+
+      - name: Test
+        run: dotnet test "$SOLUTION" --no-build --configuration Release --verbosity normal
