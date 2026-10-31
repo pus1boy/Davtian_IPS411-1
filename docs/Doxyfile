@@ -24,7 +24,7 @@ EXCLUDE_PATTERNS       = */bin/* \
                          */.github/* \
                          */docs/* \
                          */Migrations/* \
-                         */migrations/*
+                         */migrations/* \
                          */node_modules/*
 
 # --- Куда сохранять результат ---
